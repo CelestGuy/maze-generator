@@ -1,28 +1,18 @@
 package fr.celestgames.maze.structure.builders;
 
-import fr.celestgames.maze.game.Game;
-import fr.celestgames.maze.game.Maze;
+import fr.celestgames.maze.structure.Maze;
 
 import java.util.Random;
 
 public abstract class Builder {
     protected final Random rand = new Random();
-
-    public Game game;
     public Maze maze;
-    public int x, y, oldX, oldY;
 
-    public Builder(Game game, Maze maze) {
-        this.game = game;
+    public Builder(Maze maze) {
         this.maze = maze;
-
-        this.x = 0;
-        this.y = 0;
-        this.oldX = 0;
-        this.oldY = 0;
     }
 
-    public abstract void createPath();
+    public abstract void initPath();
 
-    public abstract void updatePath();
+    public abstract void createPath();
 }

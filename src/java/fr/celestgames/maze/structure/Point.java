@@ -1,4 +1,4 @@
-package fr.celestgames.maze.structure.builders;
+package fr.celestgames.maze.structure;
 
 public class Point {
     public int x, y;

@@ -1,7 +1,7 @@
 package fr.celestgames.maze.io;
 
-import fr.celestgames.maze.enums.MazeParts;
-import fr.celestgames.maze.game.Game;
+import fr.celestgames.maze.structure.Maze;
+import fr.celestgames.maze.structure.MazeParts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +10,7 @@ import java.awt.image.BufferedImage;
 import static fr.celestgames.maze.utils.ImageUtils.readImage;
 
 public class Window extends JPanel {
-    private final JFrame window = new JFrame();
-    private final Game game;
+    public final JFrame window = new JFrame();
     private final int width;
     private final int height;
     private final BufferedImage path = readImage("/assets/textures/maze/path.png");
@@ -21,10 +20,10 @@ public class Window extends JPanel {
     private final int cameraXPos;
     private final int cameraYPos;
 
-    public Window(Game game) {
-        this.game = game;
+    private Maze maze;
 
-        window.setTitle("A Mazing temple - The Buggiest Game Ever Created");
+    public Window() {
+        window.setTitle("A simple maze generator");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(true);
 
@@ -33,8 +32,7 @@ public class Window extends JPanel {
         width = 720;
         cameraXPos = 0;
         cameraYPos = 0;
-
-        addKeyListener(game.keyboard);
+;
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
@@ -46,29 +44,17 @@ public class Window extends JPanel {
         window.setVisible(true);
     }
 
+    public void setMaze(Maze m) {
+        this.maze = m;
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
 
-        int tileSize = (int) (((double) game.mainMaze.height / (double) height) / ((double) game.mainMaze.width / (double) width) + 1) * scale;
-        int mazeHeight = (game.mainMaze.height * tileSize);
-        int mazeWidth = (game.mainMaze.width * tileSize);
+        for (int y = 0; y < maze.getHeight(); y++) {
+            for (int x = 0; x < maze.getWidth(); x++) {
 
-        for (int h = 0; h < game.mainMaze.height; h++) {
-            for (int w = 0; w < game.mainMaze.width; w++) {
-                int y = (h * tileSize) + (height / 2 - mazeHeight / 2);
-                int x = (w * tileSize) + (width / 2 - mazeWidth / 2);
-
-                if (game.mainMaze.cell[h][w] == MazeParts.WALL) {
-                    graphics2D.drawImage(wall, x, y, tileSize, tileSize, null);
-
-                } else if (game.mainMaze.cell[h][w] == MazeParts.PATH
-                        || game.mainMaze.cell[h][w] == MazeParts.ARRIVAL) {
-                    graphics2D.drawImage(path, x, y, tileSize, tileSize, null);
-                } else if (game.mainMaze.cell[h][w] == MazeParts.CROSS) {
-                    graphics2D.setColor(Color.RED);
-                    graphics2D.fillRect(x, y, tileSize, tileSize);
-                }
             }
         }
 

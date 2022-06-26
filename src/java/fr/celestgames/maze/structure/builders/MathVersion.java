@@ -1,8 +1,8 @@
 package fr.celestgames.maze.structure.builders;
 
-import fr.celestgames.maze.enums.MazeParts;
-import fr.celestgames.maze.game.Game;
-import fr.celestgames.maze.game.Maze;
+import fr.celestgames.maze.structure.MazeParts;
+import fr.celestgames.maze.structure.Maze;
+import fr.celestgames.maze.structure.Point;
 
 import java.util.ArrayList;
 
@@ -11,11 +11,11 @@ public class MathVersion extends Builder {
     public int numTabHeight;
     public int numTabWidth;
 
-    public MathVersion(Game game, Maze maze) {
-        super(game, maze);
+    public MathVersion(Maze maze) {
+        super(maze);
 
-        this.numTabHeight = (this.maze.height - 1) / 2;
-        this.numTabWidth = (this.maze.width - 1) / 2;
+        this.numTabHeight = (this.maze.getHeight() - 1) / 2;
+        this.numTabWidth = (this.maze.getWidth() - 1) / 2;
 
         this.numTab = new int[this.numTabHeight][this.numTabWidth];
 
@@ -27,9 +27,9 @@ public class MathVersion extends Builder {
     }
 
     @Override
-    public void createPath() {
-        for (int i = 0; i < this.maze.height; i++) {
-            for (int j = 0; j < this.maze.width; j++) {
+    public void initPath() {
+        for (int i = 0; i < this.maze.getHeight(); i++) {
+            for (int j = 0; j < this.maze.getWidth(); j++) {
                 if (i % 2 == 1 && j % 2 == 1) {
                     this.maze.cell[i][j] = MazeParts.PATH;
                 } else {
@@ -40,7 +40,7 @@ public class MathVersion extends Builder {
     }
 
     @Override
-    public void updatePath() {
+    public void createPath() {
         ArrayList<Point> Cell = new ArrayList<>();
 
         int lastNum = numTab[0][0];
@@ -57,8 +57,8 @@ public class MathVersion extends Builder {
         if (Cell.size() > 0) {
             Point rdmPoint = Cell.get(rand.nextInt(Cell.size()));
 
-            x = rdmPoint.x;
-            y = rdmPoint.y;
+            int x = rdmPoint.x;
+            int y = rdmPoint.y;
 
             ArrayList<Point> availableCell = new ArrayList<>();
 
@@ -90,27 +90,6 @@ public class MathVersion extends Builder {
                 }
 
                 maze.cell[y * 2 + 1 + (p.y - y)][x * 2 + 1 + (p.x - x)] = MazeParts.PATH;
-            }
-        }
-
-        for (int i = 0; i < maze.height; i++) {
-            for (int j = 0; j < maze.width; j++) {
-                if (maze.cell[i][j] == MazeParts.PATH || maze.cell[i][j] == MazeParts.CROSS) {
-                    int count = 0;
-
-                    if (maze.cell[i + 1][j] == MazeParts.PATH || maze.cell[i + 1][j] == MazeParts.CROSS)
-                        count++;
-                    if (maze.cell[i - 1][j] == MazeParts.PATH || maze.cell[i - 1][j] == MazeParts.CROSS)
-                        count++;
-                    if (maze.cell[i][j + 1] == MazeParts.PATH || maze.cell[i][j + 1] == MazeParts.CROSS)
-                        count++;
-                    if (maze.cell[i][j - 1] == MazeParts.PATH || maze.cell[i][j - 1] == MazeParts.CROSS)
-                        count++;
-
-                    if (count > 2) {
-                        maze.cell[i][j] = MazeParts.CROSS;
-                    }
-                }
             }
         }
     }

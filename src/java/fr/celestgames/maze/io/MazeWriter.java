@@ -1,6 +1,6 @@
 package fr.celestgames.maze.io;
 
-import fr.celestgames.maze.game.Maze;
+import fr.celestgames.maze.structure.Maze;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
