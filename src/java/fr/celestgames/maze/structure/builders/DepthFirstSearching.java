@@ -47,9 +47,9 @@ public class DepthFirstSearching extends Builder {
                 int x = availableCell.get(randCellIndex).x;
                 int y = availableCell.get(randCellIndex).y;
 
-                boolTab[(y - 1) / 2][(x - 1) / 2] = true;
-                //maze.cell[oldY][oldX] = MazeParts.PATH;
-                maze.cell[y][x] = MazeParts.PATH;
+                boolTab[y][x] = true;
+                maze.cell[oldY][oldX] = MazeParts.PATH;
+                maze.cell[y * 2 + 1][x * 2 + 1] = MazeParts.PATH;
 
                 oldPoint.x = x;
                 oldPoint.y = y;
@@ -63,8 +63,6 @@ public class DepthFirstSearching extends Builder {
                 path.remove(path.size() - 1);
             }
         }
-
-        return;
     }
 
     public boolean checkBoolTab() {
@@ -81,31 +79,21 @@ public class DepthFirstSearching extends Builder {
     public ArrayList<Point> getNeighbours(Point p) {
         ArrayList<Point> points = new ArrayList<>();
 
-        int pYBoolTab = (p.y - 1) / 2;
-        int pXBoolTab = (p.x - 1) / 2;
         int boolTabHeight = (maze.getHeight() - 1) / 2;
         int boolTabWidth = (maze.getWidth() - 1) / 2;
 
-        if (pXBoolTab > 0 && !boolTab[pYBoolTab][pXBoolTab - 1]) {
-            if (p.x > 0 && maze.cell[p.y][p.x - 1] == MazeParts.WALL) {
-                points.add(new Point(p.x - 1, p.y));
-            }
+        if (p.x > 0 && !boolTab[p.y][p.x - 1]) {
+            points.add(new Point(p.x - 1, p.y));
         }
-        if (pXBoolTab < (boolTabWidth - 1) && !boolTab[pYBoolTab][pXBoolTab + 1]) {
-            if (p.x < (maze.getWidth() - 1) && maze.cell[p.y][p.x + 1] == MazeParts.WALL) {
-                points.add(new Point(p.x + 1, p.y));
-            }
+        if (p.x < (boolTabWidth - 1) && !boolTab[p.y][p.x + 1]) {
+            points.add(new Point(p.x + 1, p.y));
         }
 
-        if (pYBoolTab > 0 && !boolTab[pYBoolTab - 1][pXBoolTab]) {
-            if (p.y > 0 && maze.cell[p.y - 1][p.x] == MazeParts.WALL) {
-                points.add(new Point(p.x, p.y - 1));
-            }
+        if (p.y > 0 && !boolTab[p.y - 1][p.x]) {
+            points.add(new Point(p.x, p.y - 1));
         }
-        if (pYBoolTab < (boolTabHeight - 1) && !boolTab[pYBoolTab + 1][pXBoolTab]) {
-            if (p.y < (maze.getHeight() - 1) && maze.cell[p.y + 1][p.x] == MazeParts.WALL) {
-                points.add(new Point(p.x, p.y + 1));
-            }
+        if (p.y < (boolTabHeight - 1) && !boolTab[p.y + 1][p.x]) {
+            points.add(new Point(p.x, p.y + 1));
         }
 
         return points;
