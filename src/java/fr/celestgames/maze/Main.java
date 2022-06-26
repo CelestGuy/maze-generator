@@ -15,6 +15,7 @@ public class Main {
         Maze maze = new Maze(25, 25, GenMode.DEPTH_FIRST_SEARCHING);
         Builder builder = new DepthFirstSearching(maze);
         window.setMaze(maze);
+        window.setBuilder(builder);
 
         builder.initPath();
 
@@ -31,7 +32,7 @@ public class Main {
 
             builder.createPath();
 
-            window.repaint();
+            window.update();
         }
     }
 }

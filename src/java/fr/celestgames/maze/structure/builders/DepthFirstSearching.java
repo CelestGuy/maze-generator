@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class DepthFirstSearching extends Builder {
     public ArrayList<Point> path;
-    private Point oldPoint;
     public boolean[][] boolTab;
 
     public DepthFirstSearching(Maze maze) {
@@ -48,7 +47,7 @@ public class DepthFirstSearching extends Builder {
                 int y = availableCell.get(randCellIndex).y;
 
                 boolTab[y][x] = true;
-                maze.cell[oldY][oldX] = MazeParts.PATH;
+                maze.cell[(oldY * 2 + 1) + (y - oldY)][(oldX * 2 + 1) + (x - oldX)] = MazeParts.PATH;
                 maze.cell[y * 2 + 1][x * 2 + 1] = MazeParts.PATH;
 
                 oldPoint.x = x;
@@ -61,6 +60,9 @@ public class DepthFirstSearching extends Builder {
                 maze.cell[y * 2 + 1][x * 2 + 1] = MazeParts.PATH;
 
                 path.remove(path.size() - 1);
+
+                oldPoint.x = path.get(path.size() - 1).x;
+                oldPoint.y = path.get(path.size() - 1).y;
             }
         }
     }
