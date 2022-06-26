@@ -24,21 +24,14 @@ public class Main {
 
         while (true) {
             try {
-                Thread.sleep(16, 6666);
+                Thread.sleep(100);
             }catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
             builder.createPath();
+
+            window.repaint();
         }
-
-        /*main.labBuilderMathVersion = new LabBuilderMathVersion(main, main.size);
-        main.recursiveBacktrack = new RecursiveBacktrack(main, main.size);
-
-        if (main.genMode == GenMode.Mathieu) {
-            main.labBuilderMathVersion.createPath();
-        } else {
-            main.recursiveBacktrack.createPath();
-        }*/
     }
 }

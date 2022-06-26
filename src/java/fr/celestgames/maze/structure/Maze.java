@@ -50,26 +50,4 @@ public class Maze implements Serializable {
     public int getWidth() {
         return width;
     }
-
-    public ArrayList<Point> getNeighbours(Point p) {
-        ArrayList<Point> points = new ArrayList<>();
-
-        if (p.y >= 0 && p.y < cell.length) {
-            if (p.x > 0 && cell[p.y][p.x - 1] == MazeParts.WALL) {
-                points.add(new Point(p.x - 1, p.y));
-            }
-            if (p.x < (width - 1) && cell[p.y][p.x + 1] == MazeParts.WALL) {
-                points.add(new Point(p.x + 1, p.y));
-            }
-
-            if (p.y > 0 && cell[p.y - 1][p.x] == MazeParts.WALL) {
-                points.add(new Point(p.x, p.y -1));
-            }
-            if (p.y < (height - 1) && cell[p.y + 1][p.x] == MazeParts.WALL) {
-                points.add(new Point(p.x, p.y + 1));
-            }
-        }
-
-        return points;
-    }
 }

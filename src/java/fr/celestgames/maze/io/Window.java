@@ -52,9 +52,21 @@ public class Window extends JPanel {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
 
-        for (int y = 0; y < maze.getHeight(); y++) {
-            for (int x = 0; x < maze.getWidth(); x++) {
+        int tileSize = (int) (((double) maze.getHeight() / (double) height) / ((double) maze.getWidth() / (double) width) + 1) * scale;
+        int mazeHeight = (maze.getHeight() * tileSize);
+        int mazeWidth = (maze.getWidth() * tileSize);
 
+        for (int h = 0; h < maze.getHeight(); h++) {
+            for (int w = 0; w < maze.getWidth(); w++) {
+                int y = (h * tileSize) + (height / 2 - mazeHeight / 2);
+                int x = (w * tileSize) + (width / 2 - mazeWidth / 2);
+
+                if (maze.cell[h][w] == MazeParts.WALL) {
+                    graphics2D.drawImage(wall, x, y, tileSize, tileSize, null);
+
+                } else if (maze.cell[h][w] == MazeParts.PATH) {
+                    graphics2D.drawImage(path, x, y, tileSize, tileSize, null);
+                }
             }
         }
 
