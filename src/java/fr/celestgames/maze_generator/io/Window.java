@@ -1,9 +1,10 @@
 package fr.celestgames.maze_generator.io;
 
 import fr.celestgames.maze_generator.maze.Cell;
+import fr.celestgames.maze_generator.maze.CellTiles;
 import fr.celestgames.maze_generator.maze.Maze;
-import fr.celestgames.maze_generator.maze.CellType;
 import fr.celestgames.maze_generator.maze.builders.Builder;
+import fr.celestgames.maze_generator.maze.builders.CellMerging;
 import fr.celestgames.maze_generator.maze.solvers.Dijkstra;
 import fr.celestgames.maze_generator.maze.solvers.Solver;
 
@@ -74,24 +75,23 @@ public class Window extends JPanel implements Runnable {
         this.solver = s;
     }
 
-    int frameCount = 0;
+
     @Override
     public void run() {
         while (true) {
             update();
-            try {
+            /*try {
                 Thread.sleep(8, 333333);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-            frameCount++;
+            }*/
         }
     }
 
     public void update() {
         width = window.getWidth();
         height = window.getHeight();
-        tileSize = (int) ((int) ((double) height / (double) maze.getHeight()) * 0.9);
+        tileSize = (int) ((int) ((double) height / (double) maze.getHeight()) * 0.9) + 1;
 
         grid = k.tKey;
 
@@ -110,39 +110,97 @@ public class Window extends JPanel implements Runnable {
                 for (int w = 0; w < maze.getWidth(); w++) {
                     int y = (h * tileSize) + (height / 2 - mazeHeight / 2);
                     int x = (w * tileSize) + (width / 2 - mazeWidth / 2);
+                    graphics2D.drawImage(CellTiles.BASE, x, y, tileSize, tileSize, null);
+                    Cell cell = maze.cells[h][w];
 
-                    BufferedImage img = maze.cells[h][w].getType().getTile();
+                    if (cell.getNorth() != null || cell.getSouth() != null || cell.getWest() != null || cell.getEast() != null) {
+                        graphics2D.drawImage(CellTiles.CENTER, x, y, tileSize, tileSize, null);
 
-                    graphics2D.drawImage(img, x, y, tileSize, tileSize, null);
-
-                    if (grid) {
-                        graphics2D.setColor(Color.black);
-                        graphics2D.drawRect(x, y, tileSize, tileSize);
+                        if (cell.getNorth() != null) {
+                            graphics2D.drawImage(CellTiles.NORTH, x, y, tileSize, tileSize, null);
+                        }
+                        if (cell.getSouth() != null) {
+                            graphics2D.drawImage(CellTiles.SOUTH, x, y, tileSize, tileSize, null);
+                        }
+                        if (cell.getWest() != null) {
+                            graphics2D.drawImage(CellTiles.WEST, x, y, tileSize, tileSize, null);
+                        }
+                        if (cell.getEast() != null) {
+                            graphics2D.drawImage(CellTiles.EAST, x, y, tileSize, tileSize, null);
+                        }
                     }
 
                     if (solver.isSolving() && solver instanceof Dijkstra s) {
-                        BufferedImage marked_img = maze.cells[h][w].getType().getMarkedTile();
+                        if (s.marked.contains(cell)) {
+                            if (cell.getNorth() != null || cell.getSouth() != null || cell.getWest() != null || cell.getEast() != null) {
+                                graphics2D.drawImage(CellTiles.MARKED_CENTER, x, y, tileSize, tileSize, null);
 
-                        if (s.marked.contains(maze.cells[h][w])) {
-                            graphics2D.drawImage(marked_img, x, y, tileSize, tileSize, null);
+                                if (cell.getNorth() != null) {
+                                    graphics2D.drawImage(CellTiles.MARKED_NORTH, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getSouth() != null) {
+                                    graphics2D.drawImage(CellTiles.MARKED_SOUTH, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getWest() != null) {
+                                    graphics2D.drawImage(CellTiles.MARKED_WEST, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getEast() != null) {
+                                    graphics2D.drawImage(CellTiles.MARKED_EAST, x, y, tileSize, tileSize, null);
+                                }
+                            }
                         }
                     }
 
                     if (solver.isSolved()) {
-                        BufferedImage path_img = maze.cells[h][w].getType().getPathTile();
+                        if (solver.getPath().contains(cell)) {
+                            if (cell.getNorth() != null || cell.getSouth() != null || cell.getWest() != null || cell.getEast() != null) {
+                                graphics2D.drawImage(CellTiles.PATH_CENTER, x, y, tileSize, tileSize, null);
 
-                        if (solver.getPath().contains(maze.cells[h][w])) {
-                            graphics2D.drawImage(path_img, x, y, tileSize, tileSize, null);
+                                if (cell.getNorth() != null && solver.getPath().contains(cell.getNorth())) {
+                                    graphics2D.drawImage(CellTiles.PATH_NORTH, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getSouth() != null && solver.getPath().contains(cell.getSouth())) {
+                                    graphics2D.drawImage(CellTiles.PATH_SOUTH, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getWest() != null && solver.getPath().contains(cell.getWest())) {
+                                    graphics2D.drawImage(CellTiles.PATH_WEST, x, y, tileSize, tileSize, null);
+                                }
+                                if (cell.getEast() != null && solver.getPath().contains(cell.getEast())) {
+                                    graphics2D.drawImage(CellTiles.PATH_EAST, x, y, tileSize, tileSize, null);
+                                }
+                            }
+                        }
+                    }
+
+                    if (grid) {
+                        if (builder instanceof CellMerging c) {
+                            if (cell.getNorth() != null || cell.getSouth() != null || cell.getWest() != null || cell.getEast() != null) {
+                                int t = c.numTab[h][w];
+                                graphics2D.setColor(new Color(((t % 255) * 5) % 255, (t % 255), ((t % 255) * t) % 255, 50));
+                                graphics2D.fillRect(x, y, tileSize, tileSize);
+                            }
+                        }
+
+                        graphics2D.setColor(Color.BLACK);
+                        graphics2D.drawRect(x, y, tileSize, tileSize);
+                    }
+
+                    if (solver.isSolved() || solver.isSolving()) {
+                        if (cell == solver.getDeparture()) {
+                            graphics2D.drawImage(CellTiles.DEPARTURE, x, y, tileSize, tileSize, null);
+                        } else if (cell == solver.getArrival()) {
+                            graphics2D.drawImage(CellTiles.ARRIVAL, x, y, tileSize, tileSize, null);
                         }
                     }
                 }
             }
 
+            /*
             int y = (builder.getLastCell().getY() * tileSize) + (height / 2 - mazeHeight / 2);
             int x = (builder.getLastCell().getX() * tileSize) + (width / 2 - mazeWidth / 2);
 
             graphics2D.setColor(Color.RED);
-            graphics2D.drawImage(marker, x, y, tileSize, tileSize, null);
+            graphics2D.drawImage(marker, x, y, tileSize, tileSize, null);*/
         }
 
         graphics2D.dispose();

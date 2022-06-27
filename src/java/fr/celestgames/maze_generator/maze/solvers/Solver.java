@@ -58,4 +58,12 @@ public abstract class Solver {
     public ArrayList<Cell> getPath() {
         return path;
     }
+
+    public Cell getDeparture() {
+        return departure;
+    }
+
+    public Cell getArrival() {
+        return arrival;
+    }
 }

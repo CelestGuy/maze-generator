@@ -4,6 +4,7 @@ import fr.celestgames.maze_generator.io.Window;
 import fr.celestgames.maze_generator.maze.GenMode;
 import fr.celestgames.maze_generator.maze.Maze;
 import fr.celestgames.maze_generator.maze.builders.Builder;
+import fr.celestgames.maze_generator.maze.builders.CellMerging;
 import fr.celestgames.maze_generator.maze.builders.DepthFirstSearch;
 import fr.celestgames.maze_generator.maze.solvers.Dijkstra;
 import fr.celestgames.maze_generator.maze.solvers.Solver;
@@ -11,7 +12,7 @@ import fr.celestgames.maze_generator.maze.solvers.Solver;
 public class Main {
     public static void main(String[] args) {
         Window window = new Window();
-        Maze maze = new Maze(25, 25);
+        Maze maze = new Maze(20, 20);
         Builder builder = new DepthFirstSearch(maze);
 
         Solver solver = new Dijkstra(maze);
@@ -20,8 +21,8 @@ public class Main {
         window.setBuilder(builder);
         window.setSolver(solver);
 
-        builder.setClockTime(1);
-        solver.setClockTime(1);
+        builder.setClockTime(10);
+        solver.setClockTime(10);
 
         while (!window.window.isVisible()) {
 

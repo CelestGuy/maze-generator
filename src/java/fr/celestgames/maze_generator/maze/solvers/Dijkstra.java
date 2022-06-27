@@ -18,6 +18,7 @@ public class Dijkstra extends Solver {
     @Override
     public void solve() {
         solving = true;
+
         if ((departure != null && arrival != null) && !solved) {
             ArrayDeque<Cell> queue = new ArrayDeque<>();
 
@@ -52,6 +53,7 @@ public class Dijkstra extends Solver {
                         }
                         if (neighbor == arrival) {
                             solved = true;
+                            marked.add(neighbor);
                             return;
                         }
                     }
@@ -68,8 +70,18 @@ public class Dijkstra extends Solver {
     public void path() {
         if ((departure != null && arrival != null) && solved) {
             Cell current = arrival;
+            path.add(current);
             int distance = distances.get(current);
+
             while (current != departure) {
+                if (clockTime > 0) {
+                    try {
+                        Thread.sleep(clockTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 for (Cell neighbor : current.getNeighbors()) {
                     if (neighbor != null && distances.get(neighbor) == distance - 1) {
                         path.add(neighbor);
@@ -79,6 +91,7 @@ public class Dijkstra extends Solver {
                     }
                 }
             }
+
             path.add(departure);
         }
     }
