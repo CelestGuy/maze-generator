@@ -6,16 +6,17 @@ import fr.celestgames.maze_generator.maze.Maze;
 import fr.celestgames.maze_generator.maze.builders.Builder;
 import fr.celestgames.maze_generator.maze.builders.CellMerging;
 import fr.celestgames.maze_generator.maze.builders.DepthFirstSearch;
+import fr.celestgames.maze_generator.maze.solvers.BellmanFord;
 import fr.celestgames.maze_generator.maze.solvers.Dijkstra;
 import fr.celestgames.maze_generator.maze.solvers.Solver;
 
 public class Main {
     public static void main(String[] args) {
         Window window = new Window();
-        Maze maze = new Maze(20, 20);
+        Maze maze = new Maze(15, 15);
         Builder builder = new DepthFirstSearch(maze);
 
-        Solver solver = new Dijkstra(maze);
+        Solver solver = new BellmanFord(maze);
 
         window.setMaze(maze);
         window.setBuilder(builder);
