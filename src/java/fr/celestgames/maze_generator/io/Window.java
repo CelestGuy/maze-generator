@@ -1,13 +1,7 @@
 package fr.celestgames.maze_generator.io;
 
-import fr.celestgames.maze_generator.maze.Cell;
 import fr.celestgames.maze_generator.maze.CellTiles;
 import fr.celestgames.maze_generator.maze.Maze;
-import fr.celestgames.maze_generator.maze.builders.Builder;
-import fr.celestgames.maze_generator.maze.builders.CellMerging;
-import fr.celestgames.maze_generator.maze.solvers.BellmanFord;
-import fr.celestgames.maze_generator.maze.solvers.Dijkstra;
-import fr.celestgames.maze_generator.maze.solvers.Solver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,14 +9,15 @@ import java.awt.image.BufferedImage;
 
 import static fr.celestgames.maze_generator.utils.ImageUtils.readImage;
 
-public class Window extends JPanel implements Runnable {
-    public final JFrame window = new JFrame();
-
-    private Thread windowThread = new Thread(this);
+public class Window implements Runnable {
+    private final Thread windowThread = new Thread(this);
+    private final JFrame window = new JFrame();
+    private final JPanel panel = new JPanel();
+    private final Keyboard k;
+    private final Mouse m;
     private int width;
     private int height;
-    private Keyboard k;
-    private Mouse m;
+    private Maze maze;
 
     public Window() {
         window.setTitle("A simple maze generator");
@@ -35,46 +30,34 @@ public class Window extends JPanel implements Runnable {
         k = new Keyboard();
         m = new Mouse();
 
-        addMouseListener(m);
-        addKeyListener(k);
-        setPreferredSize(new Dimension(width, height));
-        setBackground(Color.BLACK);
-        setDoubleBuffered(true);
-        setFocusable(true);
+        panel.addMouseListener(m);
+        panel.addKeyListener(k);
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setBackground(Color.BLACK);
+        panel.setFocusable(true);
 
-        window.add(this);
+        window.add(panel);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
 
+    public void setMaze(Maze maze) {
+        this.maze = maze;
+    }
+
     @Override
     public void run() {
         while (true) {
-            update();
-            /*try {
-                Thread.sleep(8, 333333);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+            width = window.getWidth();
+            height = window.getHeight();
+
+            BufferedImage image = maze.render();
+
+            if (image != null) {
+                panel.getGraphics().drawImage(image, 0, 0, maze.getWidth() * 16 , maze.getHeight() * 16, null);
+            }
         }
-    }
-
-    public void update() {
-        width = window.getWidth();
-        height = window.getHeight();
-
-        repaint();
-    }
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D graphics2D = (Graphics2D) g;
-
-
-
-        graphics2D.dispose();
-        g.dispose();
     }
 
     public Thread getThread() {

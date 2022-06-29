@@ -1,42 +1,26 @@
 package fr.celestgames.maze_generator;
 
 import fr.celestgames.maze_generator.io.Window;
-import fr.celestgames.maze_generator.maze.GenMode;
 import fr.celestgames.maze_generator.maze.Maze;
 import fr.celestgames.maze_generator.maze.builders.Builder;
 import fr.celestgames.maze_generator.maze.builders.CellMerging;
-import fr.celestgames.maze_generator.maze.builders.DepthFirstSearch;
-import fr.celestgames.maze_generator.maze.solvers.BellmanFord;
-import fr.celestgames.maze_generator.maze.solvers.Dijkstra;
-import fr.celestgames.maze_generator.maze.solvers.Solver;
+import fr.celestgames.maze_generator.maze.builders.DepthFirst;
 
 public class Main {
     public static void main(String[] args) {
         Window window = new Window();
-        Maze maze = new Maze(15, 15);
-        Builder builder = new DepthFirstSearch(maze);
+        Maze maze = new Maze(50, 100);
+        window.setMaze(maze);
+        Builder builder = new DepthFirst(maze);
 
-        Solver solver = new BellmanFord(maze);
-
-        //window.setMaze(maze);
-        //window.setBuilder(builder);
-        //window.setSolver(solver);
-
-        builder.setClockTime(10);
-        solver.setClockTime(10);
-
-        while (!window.window.isVisible()) {
-
-        }
+        builder.disableClock();
 
         window.getThread().start();
 
-        builder.createPath();
+        long start = System.nanoTime();
+        builder.update();
+        long end = System.nanoTime();
 
-        solver.setDeparture(maze.getCell(0, 0));
-        solver.setArrival(maze.getCell(maze.getWidth() - 1, maze.getHeight() - 1));
-
-        solver.solve();
-        solver.path();
+        System.out.println("Time: " + (end - start) / 1000000 + " ms");
     }
 }

@@ -1,7 +1,7 @@
 # Idea Files
 **/.idea/
 **/out/
-
+**/old/
 # Compiled class file
 *.class
 
