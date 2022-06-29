@@ -18,9 +18,9 @@ public class Main {
 
         Solver solver = new BellmanFord(maze);
 
-        window.setMaze(maze);
-        window.setBuilder(builder);
-        window.setSolver(solver);
+        //window.setMaze(maze);
+        //window.setBuilder(builder);
+        //window.setSolver(solver);
 
         builder.setClockTime(10);
         solver.setClockTime(10);

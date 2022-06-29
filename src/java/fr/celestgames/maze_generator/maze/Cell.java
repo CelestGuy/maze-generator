@@ -11,6 +11,10 @@ public class Cell {
     private final int x;
     private final int y;
 
+    private int count;
+
+    private int heuristic;
+
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
@@ -71,5 +75,21 @@ public class Cell {
             neighbors.add(east);
         }
         return neighbors;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getHeuristic() {
+        return heuristic;
+    }
+
+    public void setHeuristic(int heuristic) {
+        this.heuristic = heuristic;
     }
 }

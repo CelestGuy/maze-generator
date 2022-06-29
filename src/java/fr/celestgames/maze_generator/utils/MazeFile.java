@@ -1,14 +1,11 @@
-package fr.celestgames.maze_generator.io;
+package fr.celestgames.maze_generator.utils;
 
 import fr.celestgames.maze_generator.maze.Maze;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 
-public class MazeReader {
+public class MazeFile {
     public static Maze loadMaze(File savedMaze) {
         if (savedMaze != null) {
             try {
@@ -32,5 +29,23 @@ public class MazeReader {
 
         }*/
         return null;
+    }
+    public static void saveMaze(File outputFile, Maze maze) {
+        try {
+            FileOutputStream saveFileOS = new FileOutputStream(outputFile);
+            ObjectOutputStream mazeOS = new ObjectOutputStream(saveFileOS);
+
+            mazeOS.writeObject(maze);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveMaze(BufferedImage e) {
+
+    }
+
+    public static void saveMaze(BufferedImage[] e) {
+
     }
 }
