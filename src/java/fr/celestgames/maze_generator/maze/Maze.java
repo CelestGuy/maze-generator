@@ -23,6 +23,44 @@ public class Maze implements Serializable {
         }
     }
 
+    public Maze(int height, int width, boolean connected) {
+        this.height = height;
+        this.width = width;
+
+        this.cells = new Cell[height][width];
+
+        if (connected) {
+            for (int h = 0; h < height; h++) {
+                for (int w = 0; w < width; w++) {
+                    cells[h][w] = new Cell(w, h);
+                }
+            }
+
+            for (int h = 0; h < height; h++) {
+                for (int w = 0; w < width; w++) {
+                    if (w < width - 1) {
+                        cells[h][w].setEast(cells[h][w + 1]);
+                    }
+                    if (h < height - 1) {
+                        cells[h][w].setSouth(cells[h + 1][w]);
+                    }
+                    if (w > 0) {
+                        cells[h][w].setWest(cells[h][w - 1]);
+                    }
+                    if (h > 0) {
+                        cells[h][w].setNorth(cells[h - 1][w]);
+                    }
+                }
+            }
+        } else {
+            for (int h = 0; h < height; h++) {
+                for (int w = 0; w < width; w++) {
+                    cells[h][w] = new Cell(w, h);
+                }
+            }
+        }
+    }
+
     public boolean isEqual(Maze mazeToCompare) {
         if (mazeToCompare.getHeight() != height || mazeToCompare.getWidth() != width) {
             return false;
@@ -50,6 +88,22 @@ public class Maze implements Serializable {
         return cells[y][x];
     }
 
+    public void setVoidCell(int x, int y) {
+        cells[y][x] = new Cell(x, y);
+        if (x < width - 1) {
+            cells[y][x + 1].setWest(null);
+        }
+        if (y < height - 1) {
+            cells[y + 1][x].setNorth(null);
+        }
+        if (x > 0) {
+            cells[y][x - 1].setEast(null);
+        }
+        if (y > 0) {
+            cells[y - 1][x].setSouth(null);
+        }
+    }
+
     public ArrayList<Cell> getCells() {
         ArrayList<Cell> cells = new ArrayList<>();
         for (int h = 0; h < height; h++) {
@@ -58,34 +112,5 @@ public class Maze implements Serializable {
             }
         }
         return cells;
-    }
-
-    public BufferedImage render() {
-        BufferedImage image = new BufferedImage(width * 16, height * 16, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-
-        for (int h = 0; h < height; h++) {
-            for (int w = 0; w < width; w++) {
-                g2.drawImage(CellTiles.BASE, w * 16, h * 16, null);
-                if (cells[h][w].getNorth() != null || cells[h][w].getSouth() != null || cells[h][w].getEast() != null || cells[h][w].getWest() != null) {
-                    if (cells[h][w].getNorth() != null) {
-                        g2.drawImage(CellTiles.NORTH, w * 16, h * 16, null);
-                    }
-                    if (cells[h][w].getSouth() != null) {
-                        g2.drawImage(CellTiles.SOUTH, w * 16, h * 16, null);
-                    }
-                    if (cells[h][w].getEast() != null) {
-                        g2.drawImage(CellTiles.EAST, w * 16, h * 16, null);
-                    }
-                    if (cells[h][w].getWest() != null) {
-                        g2.drawImage(CellTiles.WEST, w * 16, h * 16, null);
-                    }
-                    g2.drawImage(CellTiles.CENTER, w * 16, h * 16, null);
-                }
-            }
-        }
-
-        g2.dispose();
-        return image;
     }
 }

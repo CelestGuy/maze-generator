@@ -1,5 +1,6 @@
 package fr.celestgames.maze_generator.maze;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static fr.celestgames.maze_generator.utils.ImageUtils.readImage;
@@ -27,4 +28,12 @@ public class CellTiles {
 
     public static final BufferedImage DEPARTURE = readImage("/assets/textures/cells/departure.png");
     public static final BufferedImage ARRIVAL = readImage("/assets/textures/cells/arrival.png");
+
+    public static final BufferedImage VISITED_SOUTH = readImage("/assets/textures/cells/visited/south.png");
+    public static final BufferedImage VISITED_NORTH = readImage("/assets/textures/cells/visited/north.png");
+    public static final BufferedImage VISITED_EAST = readImage("/assets/textures/cells/visited/east.png");
+    public static final BufferedImage VISITED_WEST = readImage("/assets/textures/cells/visited/west.png");
+    public static final BufferedImage VISITED_CENTER = readImage("/assets/textures/cells/visited/center.png");
+
+    public static final BufferedImage MARKER = readImage("/assets/textures/cells/marker.png");
 }

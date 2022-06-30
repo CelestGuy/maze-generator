@@ -3,59 +3,37 @@ package fr.celestgames.maze_generator.maze.solvers;
 import fr.celestgames.maze_generator.maze.Cell;
 import fr.celestgames.maze_generator.maze.Maze;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class Solver {
-    protected final ArrayList<Cell> path;
+    protected HashSet<Cell> path;
     protected Maze maze;
     protected Cell departure;
     protected Cell arrival;
 
     protected boolean solved;
     protected boolean solving;
+
+    protected boolean solvable;
     protected int clockTime;
 
     public Solver(Maze maze) {
         this.maze = maze;
         this.solved = false;
         this.solving = false;
+        this.solvable = true;
         this.clockTime = 10;
-        this.path = new ArrayList<>();
+        this.path = new HashSet<>();
     }
-
-    public abstract void solve();
-
+    public abstract void update();
     public abstract void path();
+    public abstract void setDeparture(Cell departure);
+    public abstract void setArrival(Cell arrival);
+    public abstract void render(Graphics2D g2, int cellSize);
 
-    public boolean isSolved() {
-        return solved;
-    }
-
-    public boolean isSolving() {
-        return solving;
-    }
-
-    public void setClockTime(int clockTime) {
-        this.clockTime = clockTime;
-    }
-
-    public void disableClock() {
-        this.clockTime = 0;
-    }
-
-    public int getClockTime() {
-        return this.clockTime;
-    }
-
-    public void setDeparture(Cell departure) {
-        this.departure = departure;
-    }
-
-    public void setArrival(Cell arrival) {
-        this.arrival = arrival;
-    }
-
-    public ArrayList<Cell> getPath() {
+    public HashSet<Cell> getPath() {
         return path;
     }
 
@@ -65,5 +43,17 @@ public abstract class Solver {
 
     public Cell getArrival() {
         return arrival;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public boolean isSolving() {
+        return solving;
+    }
+
+    public boolean isSolvable() {
+        return solvable;
     }
 }

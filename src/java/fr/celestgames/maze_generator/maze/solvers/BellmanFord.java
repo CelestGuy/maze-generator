@@ -1,25 +1,26 @@
 package fr.celestgames.maze_generator.maze.solvers;
 
 import fr.celestgames.maze_generator.maze.Cell;
+import fr.celestgames.maze_generator.maze.CellTiles;
 import fr.celestgames.maze_generator.maze.Maze;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class BellmanFord extends Solver {
-    public final ArrayList<Cell> marked;
-    private final ArrayList<Cell> cells;
+    public HashSet<Cell> marked;
+    private HashSet<Cell> cells;
+    private HashMap<Cell, Double> dist;
 
-    public Cell marker;
-
-    private final HashMap<Cell, Double> dist;
-
-    private final HashMap<Cell, Cell> pred;
+    private HashMap<Cell, Cell> pred;
+    private int index = 0;
 
     public BellmanFord(Maze maze) {
         super(maze);
-        marked = new ArrayList<>();
-        cells = new ArrayList<>();
+        marked = new HashSet<>();
+        cells = new HashSet<>();
         dist = new HashMap<>();
         pred = new HashMap<>();
 
@@ -30,21 +31,11 @@ public class BellmanFord extends Solver {
         }
     }
 
+
     @Override
-    public void solve() {
-        if (super.departure != null && super.arrival != null) {
-            solving = true;
-
-            dist.put(super.departure, 0.0);
-            for (int i = 0; i < cells.size() - 1; i++) {
-                if (clockTime > 0) {
-                    try {
-                        Thread.sleep(clockTime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
+    public void update() {
+        if ((super.departure != null && super.arrival != null) && !solved && solvable) {
+            if (index < cells.size() - 1) {
                 for (Cell cell : cells) {
                     for (Cell neighbor : cell.getNeighbors()) {
                         if (neighbor != null) {
@@ -65,9 +56,17 @@ public class BellmanFord extends Solver {
                 }
             }
 
-            solved = true;
-        }
+            index++;
+        } else {
+            if (departure == null) {
+                System.out.println("La cellule d'arrivée n'a pas été définie...");
+            } else if (arrival == null) {
+                System.out.println("La cellule de départ n'a pas été définie...");
+            }
 
+            solving = false;
+            solved = false;
+        }
     }
 
     @Override
@@ -75,15 +74,58 @@ public class BellmanFord extends Solver {
         Cell dernierSommet = arrival;
 
         while (dernierSommet != null) {
-            if (clockTime > 0) {
-                try {
-                    Thread.sleep(clockTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             path.add(dernierSommet);
             dernierSommet = pred.get(dernierSommet);
+        }
+    }
+
+    @Override
+    public void setDeparture(Cell departure) {
+        super.departure = departure;
+        marked = new HashSet<>();
+        cells = new HashSet<>();
+        dist = new HashMap<>();
+        pred = new HashMap<>();
+
+        this.solved = false;
+        this.solving = true;
+
+        for (Cell cell : maze.getCells()) {
+            cells.add(cell);
+            dist.put(cell, Double.POSITIVE_INFINITY);
+            pred.put(cell, null);
+        }
+
+        dist.put(super.departure, 0.0);
+    }
+
+    @Override
+    public void setArrival(Cell arrival) {
+        super.arrival = arrival;
+    }
+
+    @Override
+    public void render(Graphics2D g2, int cellSize) {
+        for (int h = 0; h < maze.getHeight(); h++) {
+            for (int w = 0; w < maze.getWidth(); w++) {
+                if (marked.contains(maze.getCell(w, h))) {
+                    if (maze.getCell(w, h).getNorth() != null || maze.getCell(w, h).getSouth() != null || maze.getCell(w, h).getEast() != null || maze.getCell(w, h).getWest() != null) {
+                        if (maze.getCell(w, h).getNorth() != null) {
+                            g2.drawImage(CellTiles.MARKED_NORTH, w * cellSize, h * cellSize, cellSize, cellSize, null);
+                        }
+                        if (maze.getCell(w, h).getSouth() != null) {
+                            g2.drawImage(CellTiles.MARKED_SOUTH, w * cellSize, h * cellSize, cellSize, cellSize, null);
+                        }
+                        if (maze.getCell(w, h).getEast() != null) {
+                            g2.drawImage(CellTiles.MARKED_EAST, w * cellSize, h * cellSize, cellSize, cellSize, null);
+                        }
+                        if (maze.getCell(w, h).getWest() != null) {
+                            g2.drawImage(CellTiles.MARKED_WEST, w * cellSize, h * cellSize, cellSize, cellSize, null);
+                        }
+                        g2.drawImage(CellTiles.MARKED_CENTER, w * cellSize, h * cellSize, cellSize, cellSize, null);
+                    }
+                }
+            }
         }
     }
 }

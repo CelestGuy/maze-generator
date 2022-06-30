@@ -92,4 +92,8 @@ public class Cell {
     public void setHeuristic(int heuristic) {
         this.heuristic = heuristic;
     }
+
+    public int getDistance(Cell cell) {
+        return Math.abs(x - cell.getX()) + Math.abs(y - cell.getY());
+    }
 }

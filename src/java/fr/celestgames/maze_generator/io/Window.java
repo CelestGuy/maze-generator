@@ -2,6 +2,8 @@ package fr.celestgames.maze_generator.io;
 
 import fr.celestgames.maze_generator.maze.CellTiles;
 import fr.celestgames.maze_generator.maze.Maze;
+import fr.celestgames.maze_generator.ui.MazeScene;
+import fr.celestgames.maze_generator.ui.Scene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,14 +12,14 @@ import java.awt.image.BufferedImage;
 import static fr.celestgames.maze_generator.utils.ImageUtils.readImage;
 
 public class Window implements Runnable {
-    private final Thread windowThread = new Thread(this);
+    private final Thread windowThread = new Thread(this, "Window Thread");
     private final JFrame window = new JFrame();
     private final JPanel panel = new JPanel();
-    private final Keyboard k;
-    private final Mouse m;
+    public final Keyboard k;
+    public final Mouse m;
     private int width;
     private int height;
-    private Maze maze;
+    private Scene scene;
 
     public Window() {
         window.setTitle("A simple maze generator");
@@ -42,25 +44,49 @@ public class Window implements Runnable {
         window.setVisible(true);
     }
 
-    public void setMaze(Maze maze) {
-        this.maze = maze;
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
-
     @Override
     public void run() {
         while (true) {
             width = window.getWidth();
             height = window.getHeight();
 
-            BufferedImage image = maze.render();
+            if (scene != null) {
+                Graphics2D g = (Graphics2D) panel.getGraphics();
+                g.drawImage(scene.render(), 0, 0, null);
+            }
 
-            if (image != null) {
-                panel.getGraphics().drawImage(image, 0, 0, maze.getWidth() * 16 , maze.getHeight() * 16, null);
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 
     public Thread getThread() {
         return windowThread;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setTitle(String title) {
+        window.setTitle(title);
+    }
+
+    public String getTitle() {
+        return window.getTitle();
+    }
+
+    public void setIcon(String iconPath) {
+        window.setIconImage(readImage(iconPath));
     }
 }
