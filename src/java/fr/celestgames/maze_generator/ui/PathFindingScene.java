@@ -4,7 +4,6 @@ import fr.celestgames.maze_generator.io.Window;
 import fr.celestgames.maze_generator.maze.Cell;
 import fr.celestgames.maze_generator.maze.CellTiles;
 import fr.celestgames.maze_generator.maze.Maze;
-import fr.celestgames.maze_generator.maze.builders.Builder;
 import fr.celestgames.maze_generator.maze.solvers.AStar;
 import fr.celestgames.maze_generator.maze.solvers.BellmanFord;
 import fr.celestgames.maze_generator.maze.solvers.Solver;
@@ -116,18 +115,39 @@ public class PathFindingScene implements Scene {
         for (int h = 0; h < maze.getHeight(); h++) {
             for (int w = 0; w < maze.getWidth(); w++) {
                 g2.drawImage(CellTiles.BASE, w * CELL_SIZE, h * CELL_SIZE, null);
-                if (maze.getCell(w, h).getNorth() != null || maze.getCell(w, h).getSouth() != null || maze.getCell(w, h).getEast() != null || maze.getCell(w, h).getWest() != null) {
-                    if (maze.getCell(w, h).getNorth() != null) {
+                Cell cell = maze.getCell(w, h);
+
+                if (cell.getNorth() != null
+                        || cell.getSouth() != null
+                        || cell.getEast() != null
+                        || cell.getWest() != null
+                        || cell.getNorthEast() != null
+                        || cell.getNorthWest() != null
+                        || cell.getSouthEast() != null
+                        || cell.getSouthWest() != null) {
+                    if (cell.getNorth() != null) {
                         g2.drawImage(CellTiles.NORTH, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
-                    if (maze.getCell(w, h).getSouth() != null) {
+                    if (cell.getSouth() != null) {
                         g2.drawImage(CellTiles.SOUTH, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
-                    if (maze.getCell(w, h).getEast() != null) {
+                    if (cell.getEast() != null) {
                         g2.drawImage(CellTiles.EAST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
-                    if (maze.getCell(w, h).getWest() != null) {
+                    if (cell.getWest() != null) {
                         g2.drawImage(CellTiles.WEST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (cell.getNorthEast() != null) {
+                        g2.drawImage(CellTiles.NORTH_EAST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (cell.getNorthWest() != null) {
+                        g2.drawImage(CellTiles.NORTH_WEST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (cell.getSouthEast() != null) {
+                        g2.drawImage(CellTiles.SOUTH_EAST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (cell.getSouthWest() != null) {
+                        g2.drawImage(CellTiles.SOUTH_WEST, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
                     g2.drawImage(CellTiles.CENTER, w * CELL_SIZE, h * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                 }
@@ -150,7 +170,14 @@ public class PathFindingScene implements Scene {
                 int x = cell.getX();
                 int y = cell.getY();
 
-                if (cell.getNorth() != null || cell.getSouth() != null || cell.getEast() != null || cell.getWest() != null) {
+                if (cell.getNorth() != null ||
+                        cell.getSouth() != null ||
+                        cell.getEast() != null ||
+                        cell.getWest() != null ||
+                        cell.getNorthEast() != null ||
+                        cell.getNorthWest() != null ||
+                        cell.getSouthEast() != null ||
+                        cell.getSouthWest() != null) {
                     if (path.contains(cell.getNorth())) {
                         g2.drawImage(CellTiles.PATH_NORTH, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
@@ -163,15 +190,31 @@ public class PathFindingScene implements Scene {
                     if (path.contains(cell.getWest())) {
                         g2.drawImage(CellTiles.PATH_WEST, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
                     }
+                    if (path.contains(cell.getNorthEast())) {
+                        g2.drawImage(CellTiles.PATH_NORTH_EAST, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (path.contains(cell.getNorthWest())) {
+                        g2.drawImage(CellTiles.PATH_NORTH_WEST, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (path.contains(cell.getSouthEast())) {
+                        g2.drawImage(CellTiles.PATH_SOUTH_EAST, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
+                    if (path.contains(cell.getSouthWest())) {
+                        g2.drawImage(CellTiles.PATH_SOUTH_WEST, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+                    }
                     g2.drawImage(CellTiles.PATH_CENTER, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+
                 }
             }
         }
 
-        if (solver.getArrival() != null && solver.getDeparture() != null) {
+        if (solver.getArrival() != null) {
             g2.drawImage(CellTiles.ARRIVAL, solver.getArrival().getX() * CELL_SIZE, solver.getArrival().getY() * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+        }
+        if (solver.getDeparture() != null) {
             g2.drawImage(CellTiles.DEPARTURE, solver.getDeparture().getX() * CELL_SIZE, solver.getDeparture().getY() * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
         }
+
 
         g2.dispose();
         image.flush();

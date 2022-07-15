@@ -1,17 +1,20 @@
 package fr.celestgames.maze_generator.maze;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Cell {
     private Cell north;
     private Cell south;
     private Cell west;
     private Cell east;
+    private Cell north_east;
+    private Cell north_west;
+    private Cell south_east;
+    private Cell south_west;
 
     private final int x;
     private final int y;
-
-    private int count;
 
     private int heuristic;
 
@@ -36,6 +39,22 @@ public class Cell {
         return east;
     }
 
+    public Cell getNorthEast() {
+        return north_east;
+    }
+
+    public Cell getNorthWest() {
+        return north_west;
+    }
+
+    public Cell getSouthEast() {
+        return south_east;
+    }
+
+    public Cell getSouthWest() {
+        return south_west;
+    }
+
     public void setNorth(Cell north) {
         this.north = north;
     }
@@ -52,6 +71,22 @@ public class Cell {
         this.east = east;
     }
 
+    public void setNorthEast(Cell north_east) {
+        this.north_east = north_east;
+    }
+
+    public void setNorthWest(Cell north_west) {
+        this.north_west = north_west;
+    }
+
+    public void setSouthEast(Cell south_east) {
+        this.south_east = south_east;
+    }
+
+    public void setSouthWest(Cell south_west) {
+        this.south_west = south_west;
+    }
+
     public int getX() {
         return x;
     }
@@ -60,8 +95,8 @@ public class Cell {
         return y;
     }
 
-    public ArrayList<Cell> getNeighbors() {
-        ArrayList<Cell> neighbors = new ArrayList<>();
+    public HashSet<Cell> getNeighbors() {
+        HashSet<Cell> neighbors = new HashSet<>();
         if (north != null) {
             neighbors.add(north);
         }
@@ -74,15 +109,20 @@ public class Cell {
         if (east != null) {
             neighbors.add(east);
         }
+        if (north_east != null) {
+            neighbors.add(north_east);
+        }
+        if (north_west != null) {
+            neighbors.add(north_west);
+        }
+        if (south_east != null) {
+            neighbors.add(south_east);
+        }
+        if (south_west != null) {
+            neighbors.add(south_west);
+        }
+
         return neighbors;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public int getHeuristic() {

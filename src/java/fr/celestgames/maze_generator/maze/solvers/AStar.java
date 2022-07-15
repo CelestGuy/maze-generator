@@ -31,7 +31,7 @@ public class AStar extends Solver {
             closed.add(current);
 
             for (Cell neighbor : current.getNeighbors()) {
-                if (!closed.contains(neighbor)) {
+                if (!closed.contains(neighbor) && neighbor != null) {
                     double newDistance = distances.get(current) + 1;
 
                     if (distances.get(neighbor) > newDistance) {
